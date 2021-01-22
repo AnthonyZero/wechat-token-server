@@ -12,6 +12,7 @@ import (
 	"github.com/tidwall/buntdb"
 )
 
+// Failed 错误返回
 const Failed = `{"status": "fail"}`
 
 func main() {
@@ -44,8 +45,8 @@ func main() {
 		if secret, isExist := env.Data[appid]; isExist {
 			//存在对应appid的相关数据
 
-			var access_token string
-			var record_time string
+			var accessToken string
+			var recordTime string
 			var response struct {
 				Status      string `json:"status"`
 				AccessToken string `json:"access_token"`
@@ -53,12 +54,12 @@ func main() {
 			}
 
 			// 查询数据库中是否已经存在这个AppID的access_token
-			record_time = env.GetValue(appid, public.KEY_RECORD_TIME)
-			access_token = env.GetValue(appid, public.KEY_ACCESS_TOKEN)
+			recordTime = env.GetValue(appid, public.KEY_RECORD_TIME)
+			accessToken = env.GetValue(appid, public.KEY_ACCESS_TOKEN)
 
 		GetToken:
 			// 如果在数据库中不存在这个appid的token就重新获取
-			if access_token == "" {
+			if accessToken == "" {
 				tjs := env.Wt.Get(appid, secret)
 
 				// 没获得access_token就返回Failed消息
@@ -83,17 +84,17 @@ func main() {
 			// 如果数据库中已经存在了Token，就检查过期时间，如果过期了就去GetToken获取
 			curTime := time.Now().Unix()
 
-			expireTime, _ := strconv.ParseInt(record_time, 10, 64)
+			expireTime, _ := strconv.ParseInt(recordTime, 10, 64)
 			timeout, _ := strconv.ParseInt(env.GetValue(appid, public.KEY_EXPIRES_IN), 10, 64)
 
 			if curTime >= expireTime+timeout {
 				//token已过期
-				access_token = "" //fix bug 进入GetToken
+				accessToken = "" //fix bug 进入GetToken
 				goto GetToken
 			}
 
 			response.Status = "success"
-			response.AccessToken = access_token
+			response.AccessToken = accessToken
 			return ctx.JSON(http.StatusOK, response)
 		}
 		log.Println("[ERROR]: 配置文件中对应AppID不存在")
