@@ -2,7 +2,7 @@
 微信Access Token中控服务器，用来统一管理各个小程序/公众号的access_token，提供统一的接口进行获取和自动刷新Access Token。
 
 ### 简介
-微信access_token每日有一个次数限制，所以客户服务器不能每次都去请求一个新的access_token，每次请求之后，access_token都有一个过期时间。因此微信平台建议你使用一个中控服务器来定时刷新token，取得之后存起来不用再去请求token，因为access_token请求有次数限制。这样处理只有有两个好处：
+微信access_token每日有一个次数限制，所以客户服务器不能每次都去请求一个新的access_token，每次请求之后，access_token都有一个过期时间。因此微信平台建议你使用一个中控服务器来定时刷新token，取得之后存起来不用再去请求token，因为access_token请求有次数限制。这样处理有两个好处：
 
 1. 保证access_token每日都不会超出访问限制，保证服务的正常。
 2. 提高服务的性能，不用每次发送业务请求之前都先发送一次获取access_token请求。（将access_token保存在内存中，直到过期的时候再去请求一个新的来替代）
