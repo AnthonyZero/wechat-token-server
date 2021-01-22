@@ -1,0 +1,10 @@
+[
+    {
+      "appid": "appid",
+      "secret": "appsecret"
+    },
+    {
+      "appid": "第二个微信AppID",
+      "secret": "微信AppSecret"
+    }
+]
